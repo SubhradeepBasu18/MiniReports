@@ -29,3 +29,13 @@ EXEC sp_Grantee_Insert
     @Address = 'Test Address';
 
 SELECT * FROM Grantee;
+
+create proc sp_GetGranteeNameByID
+	@GranteeID int
+as
+begin
+	select GranteeName from dbo.Grantee
+	where GranteeID = @GranteeID
+end;
+
+exec sp_GetGranteeNameByID @GranteeID = 1003;

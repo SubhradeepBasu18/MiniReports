@@ -32,3 +32,12 @@ begin
 end;
 
 
+create proc sp_GetAllSitesByGranteeID
+	@GranteeID INT
+as
+begin
+	select SiteName from dbo.Site
+	where GranteeID = @GranteeID
+end;
+
+exec sp_GetAllSitesByGranteeID @GranteeID = 4;

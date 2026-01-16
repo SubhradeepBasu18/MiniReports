@@ -96,5 +96,53 @@ namespace MiniReportsProject.DAL
                 throw new Exception("Lookup Failed in catch block: " + err.Message);
             }
         }
+
+        public string GetGranteeNameByID(int GranteeID)
+        {
+            try
+            {
+                using (var db = DapperContext.GetConnection())
+                {
+                    var result = db.Query<string>(
+                        "sp_GetGranteeNameByID",
+                        new
+                        {
+                            GranteeID = @GranteeID
+                        },
+                        commandType: CommandType.StoredProcedure
+                    ).FirstOrDefault();
+
+                    return result;
+                }
+            }
+            catch (Exception err)
+            {
+                throw new Exception("Failed to fetch name from ID: " + err.Message);
+            }
+
+        }
+        public List<SiteModel> GetAllSitesByGranteeID(int GranteeID)
+        {
+            try
+            {
+                using (var db = DapperContext.GetConnection())
+                {
+                    var result = db.Query<SiteModel>(
+                        "sp_GetAllSitesByGranteeID",
+                        new
+                        {
+                            GranteeID
+                        },
+                        commandType: CommandType.StoredProcedure
+                    ).ToList<SiteModel>();
+
+                    return result;
+                }
+            }
+            catch (Exception err)
+            {
+                throw new Exception("Failed to fetch names: " + err.Message);
+            }
+        }
     }
 }

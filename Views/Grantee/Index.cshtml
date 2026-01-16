@@ -1,0 +1,79 @@
+﻿@model MiniReportsProject.ViewModel.SiteViewModel
+
+<div class="container-fluid mt-4">
+
+    <!-- Navbar / Header -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm mb-4">
+        <div class="container-fluid">
+            <span class="navbar-brand fw-bold">
+                Welcome, @Model.GranteeName
+            </span>
+
+            <div class="d-flex">
+                @*<a href="@Url.Action("Create", "Site", new { granteeId = Model. })"
+                   class="btn btn-outline-primary me-2">
+                    + Add Site
+                </a>*@
+
+                <a href="@Url.Action("Index", "State")"
+                   class="btn btn-outline-danger">
+                    Logout
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Card -->
+    <div class="card shadow-sm border">
+
+        <!-- Header -->
+        <div class="card-header bg-white border-bottom">
+            <h5 class="mb-0 fw-bold text-dark">Grantee Dashboard</h5>
+        </div>
+
+        <!-- Body -->
+        <div class="card-body">
+
+            <!-- Title -->
+            <div class="row mb-4">
+                <div class="col text-center">
+                    <h3 class="fw-semibold text-dark">Sites</h3>
+                </div>
+            </div>
+
+            <!-- No Sites Message -->
+            @if (Model.siteList.Count() == 0)
+            {
+                <div class="text-center text-muted">
+                    No sites created yet.
+                </div>
+            }
+            else
+            {
+                <!-- Site List -->
+                foreach (var site in Model.siteList)
+                {
+                    <div class="row align-items-center py-3 border-bottom">
+
+                        <!-- Site Name -->
+                        <div class="col-md-8">
+                            <span class="fs-5 text-dark">
+                                → @site.SiteName
+                            </span>
+                        </div>
+
+                        <!-- Action Button -->
+                        <div class="col-md-4 text-end">
+                            <a href="@Url.Action("Index", "Site", new { id = site.SiteID })"
+                               class="btn btn-success px-4">
+                                →
+                            </a>
+                        </div>
+
+                    </div>
+                }
+            }
+
+        </div>
+    </div>
+</div>
