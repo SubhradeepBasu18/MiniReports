@@ -41,3 +41,20 @@ begin
 end;
 
 exec sp_GetAllSitesByGranteeID @GranteeID = 4;
+
+CREATE OR ALTER PROCEDURE dbo.sp_GetSiteByID
+    @SiteID INT
+AS
+BEGIN
+    SELECT
+        SiteID      = s.SiteID,
+        SiteName    = s.SiteName,
+        SiteTypeID  = s.SiteTypeID,
+        Address     = s.Address,
+        GrantID     = s.GranteeID
+    FROM dbo.Site s
+    WHERE s.SiteID = @SiteID;
+END
+GO
+
+exec dbo.sp_GetSiteByID @SiteID = 1;

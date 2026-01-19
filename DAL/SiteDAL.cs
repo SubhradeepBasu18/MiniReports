@@ -4,7 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using System.Web;
 
 namespace MiniReportsProject.DAL
 {
@@ -37,6 +36,50 @@ namespace MiniReportsProject.DAL
             catch (Exception err)
             {
                 throw new Exception("Insert Failed in catch block: " + err.Message);
+            }
+        }
+
+        public List<SchoolModel> GetAllSchoolsBySiteID(int id)
+        {
+            try
+            {
+                using (var db = DapperContext.GetConnection())
+                {
+                    return db.Query<SchoolModel>(
+                        "sp_GetSchoolBySiteID",
+                        new {
+                           SiteID = id 
+                        },
+                        commandType: CommandType.StoredProcedure
+                    ).ToList();
+                }
+            }
+            catch (Exception err)
+            {
+                throw new Exception("Fetching Grantee Types Failed in catch block: " + err.Message);
+            }
+        }
+
+        // new: resolve site metadata (contains GrantID)
+        public SiteModel GetSiteByID(int id)
+        {
+            try
+            {
+                using (var db = DapperContext.GetConnection())
+                {
+                    return db.Query<SiteModel>(
+                        "sp_GetSiteByID",
+                        new
+                        {
+                            SiteID = id
+                        },
+                        commandType: CommandType.StoredProcedure
+                    ).FirstOrDefault();
+                }
+            }
+            catch (Exception err)
+            {
+                throw new Exception("Failed to fetch site by ID: " + err.Message);
             }
         }
     }

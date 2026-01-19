@@ -27,3 +27,13 @@ begin
 	insert into School (SchoolName, SiteID, Address)
 	values(@SchoolName, @SiteID, @Address)
 end;
+
+create or alter proc sp_GetSchoolBySiteID
+	@SiteID int
+as
+begin
+	select SchoolID, SchoolName from dbo.School
+	where SiteID = @SiteID
+end;
+
+exec sp_GetSchoolsBySiteID @SiteID = 1;

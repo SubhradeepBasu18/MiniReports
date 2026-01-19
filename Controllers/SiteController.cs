@@ -1,10 +1,7 @@
 ﻿using MiniReportsProject.DAL;
 using MiniReportsProject.Models;
 using MiniReportsProject.ViewModel;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 
 namespace MiniReportsProject.Controllers
@@ -13,23 +10,51 @@ namespace MiniReportsProject.Controllers
     {
         SiteDAL _siteDAL = new SiteDAL();
         GranteeDAL _granteeDAL = new GranteeDAL();
+
         // GET: Site
-        public ActionResult Index()
+        // id = siteId, optional granteeId supplied by caller
+        public ActionResult Index(int id, int? granteeId)
         {
-            return View();
+            var schoolList = _siteDAL.GetAllSchoolsBySiteID(id);
+
+            // resolve grantee id: prefer explicit parameter, otherwise fetch site to get GrantID
+            int resolvedGranteeId = granteeId ?? 0;
+            if (!granteeId.HasValue)
+            {
+                var site = _siteDAL.GetSiteByID(id);
+                if (site != null)
+                {
+                    resolvedGranteeId = site.GrantID;
+                }
+            }
+
+            string granteeName = null;
+            if (resolvedGranteeId > 0)
+            {
+                granteeName = _granteeDAL.GetGranteeNameByID(resolvedGranteeId);
+            }
+
+            var vm = new SiteSchoolsViewModel
+            {
+                SiteID = id,
+                GranteeID = resolvedGranteeId,
+                GranteeName = granteeName,
+                Schools = schoolList
+            };
+
+            return View(vm);
         }
 
-        public ActionResult Create(int grantId)
+        public ActionResult Create(int id)
         {
             var model = new SiteCreateViewModel
             {
-                GrantID = grantId,
+                GrantID = id,
                 EntityTypes = _granteeDAL.GetAllGranteeTypes("Site")
             };
 
             return View(model);
         }
-
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -41,7 +66,6 @@ namespace MiniReportsProject.Controllers
                 return View(model);
             }
 
-            // lookup SiteTypeID using SAME SP
             int siteTypeId = _granteeDAL.GetTypeIDByTypeName("Site", model.SelectedTypeName);
 
             if (siteTypeId == 0)
@@ -63,6 +87,5 @@ namespace MiniReportsProject.Controllers
 
             return RedirectToAction("Index", "Grantee", new { id = model.GrantID });
         }
-
     }
 }

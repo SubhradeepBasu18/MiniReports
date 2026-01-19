@@ -139,6 +139,7 @@
     <Compile Include="Models\SiteModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ViewModel\SiteCreateViewModel.cs" />
+    <Compile Include="ViewModel\SiteSchoolsViewModel.cs" />
     <Compile Include="ViewModel\SiteViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -179,14 +180,14 @@
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
-    <Content Include="TextFiles\1_EntityTypeInsert.txt" />
-    <Content Include="TextFiles\2_InsertGrantee.txt" />
-    <Content Include="TextFiles\3_InsertGrade.txt" />
-    <Content Include="TextFiles\4_Site.txt" />
-    <Content Include="TextFiles\5_School.txt" />
-    <Content Include="TextFiles\6_SchoolGrade.txt" />
-    <Content Include="TextFiles\SQLTables.txt" />
-    <Content Include="TextFiles\SystemDesign.txt" />
+    <Content Include="Stored Procedures\1_EntityTypeInsert.txt" />
+    <Content Include="Stored Procedures\2_InsertGrantee.txt" />
+    <Content Include="Stored Procedures\3_InsertGrade.txt" />
+    <Content Include="Stored Procedures\4_Site.txt" />
+    <Content Include="Stored Procedures\5_School.txt" />
+    <Content Include="Stored Procedures\6_SchoolGrade.txt" />
+    <Content Include="Stored Procedures\SQLTables.txt" />
+    <Content Include="Stored Procedures\SystemDesign.txt" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -202,6 +203,7 @@
     <Content Include="Views\State\Create.cshtml" />
     <Content Include="Views\Grantee\Index.cshtml" />
     <Content Include="Views\Site\Create.cshtml" />
+    <Content Include="Views\Site\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
