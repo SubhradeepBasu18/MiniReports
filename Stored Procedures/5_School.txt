@@ -37,3 +37,47 @@ begin
 end;
 
 exec sp_GetSchoolsBySiteID @SiteID = 1;
+
+ALTER TABLE dbo.School
+ALTER COLUMN SiteID INT NULL;
+
+
+CREATE OR ALTER PROCEDURE dbo.sp_InsertSchool
+(
+    @SchoolName VARCHAR(200),
+	@SiteID int,
+    @Address VARCHAR(300)
+)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    INSERT INTO dbo.School (SchoolName,SiteID, Address)
+    VALUES (@SchoolName, @SiteID, @Address);
+END
+
+CREATE OR ALTER PROCEDURE dbo.sp_GetAllSchoolNames
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT SchoolID, SchoolName
+    FROM dbo.School
+    WHERE SiteID IS NULL;
+END
+
+
+CREATE OR ALTER PROCEDURE dbo.sp_LinkSchoolToSite
+(
+    @SchoolID INT,
+    @SiteID INT
+)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    UPDATE dbo.School
+    SET SiteID = @SiteID
+    WHERE SchoolID = @SchoolID
+      AND SiteID IS NULL;
+END

@@ -20,7 +20,7 @@
             <a href="@Url.Action("Create", "School", new { siteId = siteId, granteeId = granteeId })" class="btn btn-primary me-2" aria-label="Add a school">
                 + Add a school
             </a>
-            <a href="@Url.Action("LinkExisting", "School", new { siteId = siteId, granteeId = granteeId })" class="btn btn-outline-secondary me-3" aria-label="Link an existing school">
+            <a href="@Url.Action("Index", "School", new { id = siteId })" class="btn btn-outline-secondary me-3" aria-label="Link an existing school">
                 Link an existing school
             </a>
             <a href="@Url.Action("Index", "Grantee", new { id = granteeId })" class="btn btn-outline-secondary">
