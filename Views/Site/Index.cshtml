@@ -4,7 +4,7 @@
     ViewBag.Title = "Schools";
     var siteId = Model?.SiteID ?? 0;
     var total = Model?.Schools?.Count() ?? 0;
-    var granteeId = Model?.GranteeID ?? 0;
+    var granteeId = Model.GranteeID;
 }
 
 <div class="container-fluid mt-4">

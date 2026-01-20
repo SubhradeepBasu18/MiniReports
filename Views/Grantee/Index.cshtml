@@ -1,89 +1,329 @@
 ﻿@model MiniReportsProject.ViewModel.SiteViewModel
 
-<div class="container-fluid mt-4">
+<style>
+    /* Page Layout */
+    .grantee-page {
+        background-color: #f8f9fa;
+        min-height: 100vh;
+    }
 
-    <!-- Navbar / Header -->
-    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm mb-4">
-        <div class="container-fluid">
-            <span class="navbar-brand fw-bold">
-                Welcome, @Model.GranteeName
-            </span>
+    .page-header {
+        background: white;
+        border-bottom: 1px solid #dee2e6;
+        padding: 2rem 0;
+        margin-bottom: 2rem;
+    }
 
-            <div class="d-flex">
-                @*<a href="@Url.Action("Create", "Site", new { granteeId = Model. })"
-                                       class="btn btn-outline-primary me-2">
-                                        + Add Site
-                    </a>*@
+    .page-header-content {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
 
-                <a href="@Url.Action("Index", "State")"
-                   class="btn btn-outline-danger">
+    .page-title {
+        font-size: 1.75rem;
+        font-weight: 600;
+        color: #212529;
+        margin: 0;
+    }
+
+    .page-subtitle {
+        font-size: 0.95rem;
+        color: #6c757d;
+        margin-top: 0.25rem;
+    }
+
+    /* Main Content */
+    .dashboard-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 1rem;
+    }
+
+    .content-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 2rem;
+    }
+
+    .content-title {
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: #212529;
+        margin: 0;
+    }
+
+    .btn-group-custom {
+        display: flex;
+        gap: 0.75rem;
+        flex-wrap: wrap;
+    }
+
+    /* Buttons */
+    .btn-primary-custom {
+        background-color: #0d6efd;
+        border-color: #0d6efd;
+        color: white;
+        font-weight: 500;
+        border-radius: 0.375rem;
+        padding: 0.5rem 1rem;
+        text-decoration: none;
+        display: inline-block;
+        transition: background-color 0.15s ease-in-out, border-color 0.15s ease-in-out;
+    }
+
+    .btn-primary-custom:hover {
+        background-color: #0b5ed7;
+        border-color: #0a58ca;
+        color: white;
+    }
+
+    .btn-secondary-custom {
+        background-color: #6c757d;
+        border-color: #6c757d;
+        color: white;
+        font-weight: 500;
+        border-radius: 0.375rem;
+        padding: 0.5rem 1rem;
+        text-decoration: none;
+        display: inline-block;
+        transition: background-color 0.15s ease-in-out, border-color 0.15s ease-in-out;
+    }
+
+    .btn-secondary-custom:hover {
+        background-color: #5c636a;
+        border-color: #565e64;
+        color: white;
+    }
+
+    .btn-success-custom {
+        background-color: #198754;
+        border-color: #198754;
+        color: white;
+        font-weight: 500;
+        border-radius: 0.375rem;
+        padding: 0.4rem 0.8rem;
+        font-size: 0.9rem;
+        text-decoration: none;
+        display: inline-block;
+        transition: background-color 0.15s ease-in-out, border-color 0.15s ease-in-out;
+    }
+
+    .btn-success-custom:hover {
+        background-color: #157347;
+        border-color: #146c43;
+        color: white;
+    }
+
+    /* Sites List */
+    .sites-list {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .site-card {
+        background: white;
+        border: 1px solid #dee2e6;
+        border-radius: 0.375rem;
+        padding: 1.5rem;
+        transition: box-shadow 0.15s ease-in-out, border-color 0.15s ease-in-out;
+    }
+
+    .site-card:hover {
+        border-color: #adb5bd;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    }
+
+    .site-card-content {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .site-info {
+        flex: 1;
+    }
+
+    .site-name {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #212529;
+        margin: 0 0 0.25rem 0;
+    }
+
+    .site-details {
+        font-size: 0.85rem;
+        color: #6c757d;
+    }
+
+    .site-actions {
+        flex-shrink: 0;
+        margin-left: 1rem;
+    }
+
+    /* Empty State */
+    .empty-state {
+        background: white;
+        border: 1px dashed #dee2e6;
+        border-radius: 0.375rem;
+        padding: 3rem 2rem;
+        text-align: center;
+    }
+
+    .empty-state-title {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #212529;
+        margin: 0 0 0.5rem 0;
+    }
+
+    .empty-state-text {
+        font-size: 0.95rem;
+        color: #6c757d;
+        margin: 0 0 1.5rem 0;
+    }
+
+    /* Header Logout */
+    .logout-btn {
+        background-color: #dc3545;
+        border-color: #dc3545;
+        color: white;
+        padding: 0.5rem 1rem;
+        text-decoration: none;
+        border-radius: 0.375rem;
+        font-weight: 500;
+        transition: background-color 0.15s ease-in-out;
+    }
+
+    .logout-btn:hover {
+        background-color: #c82333;
+        border-color: #bb2d3b;
+        color: white;
+    }
+
+    /* Responsive */
+    @@media (max-width: 768px) {
+        .page-header-content {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 1rem;
+        }
+
+        .logout-btn {
+            align-self: flex-start;
+        }
+
+        .content-header {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 1rem;
+        }
+
+        .btn-group-custom {
+            width: 100%;
+        }
+
+        .btn-group-custom .btn-primary-custom,
+        .btn-group-custom .btn-secondary-custom {
+            flex: 1;
+            text-align: center;
+        }
+
+        .site-card-content {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .site-actions {
+            margin-left: 0;
+            margin-top: 1rem;
+            width: 100%;
+        }
+
+        .btn-success-custom {
+            width: 100%;
+            text-align: center;
+        }
+    }
+</style>
+
+<div class="grantee-page">
+
+    <!-- Page Header -->
+    <div class="page-header">
+        <div class="dashboard-container">
+            <div class="page-header-content">
+                <div>
+                    <h1 class="page-title">Grantee Dashboard</h1>
+                    <p class="page-subtitle">Welcome, <strong>@Model.GranteeName</strong></p>
+                </div>
+                <a href="@Url.Action("Index", "State")" class="logout-btn">
                     Logout
                 </a>
             </div>
         </div>
-    </nav>
+    </div>
 
-    <!-- Main Card -->
-    <div class="card shadow-sm border">
+    <!-- Main Content -->
+    <div class="dashboard-container">
 
-        <!-- Header -->
-        <div class="card-header bg-white border-bottom">
-            <h5 class="mb-0 fw-bold text-dark">Grantee Dashboard</h5>
+        <!-- Content Header -->
+        <div class="content-header">
+            <h2 class="content-title">Sites</h2>
+            <div class="btn-group-custom">
+                <a href="@Url.Action("Create", "Site", new { id = Model.GranteeID })"
+                   class="btn-primary-custom">
+                    Add Site
+                </a>
+                <a href="@Url.Action("Index", "School", new {id=Model.GranteeID})"
+                   class="btn-secondary-custom">
+                    Link School
+                </a>
+            </div>
         </div>
 
-        <!-- Body -->
-        <div class="card-body">
-
-            <!-- Title -->
-            <div class="row mb-4">
-                <div class="col text-center">
-                    <h3 class="fw-semibold text-dark">Sites</h3>
-                </div>
+        <!-- Sites Content -->
+        @if (Model.siteList.Count() == 0)
+        {
+            <!-- Empty State -->
+            <div class="empty-state">
+                <h3 class="empty-state-title">No sites yet</h3>
+                <p class="empty-state-text">Create your first site to get started</p>
+                <a href="@Url.Action("Create", "Site", new { id = Model.GranteeID })"
+                   class="btn-primary-custom">
+                    Create Site
+                </a>
             </div>
-
-            <div class="row mb-4">
-                <div class="col">
-                    @*Send the grantee ID to the action*@
-                    <a href="@Url.Action("Create", "Site", new {id = Model.GranteeID})"
-                       class="btn btn-outline-primary">
-                        + Add Site
-                    </a>
-                </div>
-            </div>
-
-            <!-- No Sites Message -->
-            @if (Model.siteList.Count() == 0)
-            {
-                <div class="text-center text-muted">
-                    No sites created yet.
-                </div>
-            }
-            else
-            {
-                <!-- Site List -->
-                foreach (var site in Model.siteList)
+        }
+        else
+        {
+            <!-- Sites List -->
+            <div class="sites-list">
+                @foreach (var site in Model.siteList)
                 {
-                    <div class="row align-items-center py-3 border-bottom">
-
-                        <!-- Site Name -->
-                        <div class="col-md-8">
-                            <span class="fs-5 text-dark">
-                                → @site.SiteName
-                            </span>
+                    <div class="site-card">
+                        <div class="site-card-content">
+                            <div class="site-info">
+                                <h3 class="site-name">@site.SiteName</h3>
+                                @if (!string.IsNullOrEmpty(site.Address))
+                                {
+                                    <p class="site-details">@site.Address</p>
+                                }
+                            </div>
+                            <div class="site-actions">
+                                <a href="@Url.Action("Index", "Site", new { id = site.SiteID })"
+                                   class="btn-success-custom">
+                                    Logon
+                                </a>
+                            </div>
                         </div>
-
-                        <!-- Action Button -->
-                        <div class="col-md-4 text-end">
-                            <a href="@Url.Action("Index", "Site", new { id = site.SiteID })"
-                               class="btn btn-success px-4">
-                                →
-                            </a>
-                        </div>
-
                     </div>
                 }
-            }
+            </div>
+        }
 
-        </div>
     </div>
+
 </div>

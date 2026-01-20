@@ -1,158 +1,148 @@
-﻿@model IEnumerable<MiniReportsProject.Models.SchoolModel>
+﻿@model MiniReportsProject.ViewModel.LinkSchoolSiteViewModel
 
 @{
-    ViewBag.Title = "Schools";
-    // try to resolve siteId from route or querystring so actions can include it
-    var routeId = ViewContext.RouteData.Values["id"]?.ToString();
-    var qsId = Request.QueryString["id"];
-    int siteId = 0;
-    int.TryParse(routeId ?? qsId, out siteId);
-    var total = Model?.Count() ?? 0;
+    ViewBag.Title = "Link Schools to Site";
+    var totalSchools = Model.schoolList.Count();
+    var granteeID = Model.GranteeID;
 }
 
 <div class="container-fluid mt-4">
+
     <div class="d-flex justify-content-between align-items-center mb-3">
         <div>
-            <h3 class="mb-0 fw-bold text-dark">Schools</h3>
-            <small class="text-muted">Select one or more schools to link or operate on</small>
+            <h3 class="mb-0 fw-bold">Unlinked Schools</h3>
+            <small class="text-muted">Select one site and one or more schools</small>
         </div>
-
-        <div class="d-flex align-items-center">
-            <a href="@Url.Action("Create", "School", new { siteId = siteId })" class="btn btn-primary me-2">+ Add New</a>
-            <a href="@Url.Action("Index", "Site", new { id = siteId })" class="btn btn-outline-secondary">Back to Site</a>
+        <div>
+            <a href="@Url.Action("Index", "Grantee", new { id = granteeID })" class="btn btn-outline-secondary">
+                Back to Grantee Dashboard
+            </a>
         </div>
     </div>
 
-    @* Form now wraps the toolbar and the table so checkboxes are submitted *@
-    <form id="selectedForm" method="post" action="@Url.Action("LinkSelected", "School", new { siteId = siteId })">
+    <form method="post" action="@Url.Action("LinkSelected", "School")">
         @Html.AntiForgeryToken()
 
-        <div class="card shadow-sm border mb-3">
+        <!-- Summary -->
+        <div class="card shadow-sm border mb-4">
             <div class="card-body d-flex justify-content-between align-items-center">
                 <div>
-                    <strong class="fs-4">@total</strong>
-                    <div class="text-muted small">Total schools</div>
+                    <strong class="fs-4">@totalSchools</strong>
+                    <div class="text-muted small">Total unlinked schools</div>
                 </div>
 
-                <div class="d-flex align-items-center">
-                    <span class="me-3 text-muted">Selected: <span id="selectedCount">0</span></span>
-
-                    <button id="linkSelectedBtn" type="submit" class="btn btn-success" disabled>Link Selected</button>
+                <div>
+                    <span class="me-3 text-muted">
+                        Selected schools:
+                        <strong id="schoolCount">0</strong>
+                    </span>
+                    <button id="linkBtn" type="submit" class="btn btn-success" disabled>
+                        Link Selected
+                    </button>
                 </div>
             </div>
         </div>
 
-        <div class="card shadow-sm border">
-            <div class="card-body p-0">
-                <div class="table-responsive">
-                    <table class="table mb-0 align-middle">
-                        <thead class="table-light">
+        <!-- Sites (single select) -->
+        <h5 class="fw-bold mb-2">Select a Site</h5>
+        <div class="card shadow-sm border mb-5">
+            <div class="table-responsive">
+                <table class="table mb-0 align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th style="width:48px"></th>
+                            <th>Site Name</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model?.siteList == null || !Model.siteList.Any())
+                        {
                             <tr>
-                                <th style="width:48px">
-                                    <div class="form-check">
-                                        <input id="selectAll" class="form-check-input" type="checkbox" />
-                                    </div>
-                                </th>
-                                <th>School Name</th>
-                                <th style="width:220px" class="text-end">Actions</th>
+                                <td colspan="2" class="text-center text-muted py-4">
+                                    No sites available
+                                </td>
                             </tr>
-                        </thead>
-
-                        <tbody>
-                            @if (Model == null || !Model.Any())
+                        }
+                        else
+                        {
+                            foreach (var site in Model.siteList)
                             {
                                 <tr>
-                                    <td colspan="4" class="text-center text-muted py-4">No schools found.</td>
+                                    <td>
+                                        <input type="radio"
+                                               name="siteId"
+                                               value="@site.SiteID"
+                                               required />
+                                    </td>
+                                    <td class="fw-semibold">@site.SiteName</td>
                                 </tr>
                             }
-                            else
-                            {
-                                foreach (var item in Model)
-                                {
-                                    <tr>
-                                        <td>
-                                            <div class="form-check">
-                                                @* checkbox is inside the form now *@
-                                                <input class="form-check-input select-item" type="checkbox" name="selectedIds" value="@item.SchoolID" />
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div class="fw-semibold">@item.SchoolName</div>
-                                            <small class="text-muted">ID: @item.SchoolID</small>
-                                        </td>
-                                        <td class="text-end">
-                                            <a class="btn btn-sm btn-success me-2" href="@Url.Action("Index", "School", new { id = item.SchoolID })">Open</a>
-                                            <a class="btn btn-sm btn-outline-primary me-2" href="@Url.Action("Edit", "School", new { id = item.SchoolID })">Edit</a>
-                                            <a class="btn btn-sm btn-outline-danger" href="@Url.Action("Delete", "School", new { id = item.SchoolID })">Delete</a>
-                                        </td>
-                                    </tr>
-                                }
-                            }
-                        </tbody>
-                    </table>
-                </div>
+
+                        }
+                    </tbody>
+                </table>
             </div>
         </div>
+
+        <!-- Schools (multi select) -->
+        <h5 class="fw-bold mb-2">Select Schools</h5>
+        <div class="card shadow-sm border">
+            <div class="table-responsive">
+                <table class="table mb-0 align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th style="width:48px"></th>
+                            <th>School Name</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model?.schoolList == null || !Model.schoolList.Any())
+                        {
+                            <tr>
+                                <td colspan="2" class="text-center text-muted py-4">
+                                    No unlinked schools found
+                                </td>
+                            </tr>
+                        }
+                        else
+                        {
+                            foreach (var school in Model.schoolList)
+                            {
+                                <tr>
+                                    <td>
+                                        <input type="checkbox"
+                                               class="school-checkbox"
+                                               name="selectedIds"
+                                               value="@school.SchoolID" />
+                                    </td>
+                                    <td class="fw-semibold">@school.SchoolName</td>
+                                </tr>
+                            }
+
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
     </form>
 </div>
 
 @section Scripts {
     <script>
         (function () {
-            var selectAll = document.getElementById('selectAll');
-            var selectedCountEl = document.getElementById('selectedCount');
-            var linkBtn = document.getElementById('linkSelectedBtn');
-            var form = document.getElementById('selectedForm');
+            const checkboxes = document.querySelectorAll('.school-checkbox');
+            const countEl = document.getElementById('schoolCount');
+            const btn = document.getElementById('linkBtn');
 
-            function updateState() {
-                var checkboxes = Array.from(document.querySelectorAll('.select-item')); // refresh list if DOM changes
-                var checked = checkboxes.filter(function (c) { return c.checked; });
-                selectedCountEl.textContent = checked.length;
-                linkBtn.disabled = checked.length === 0;
-                // reflect selectAll checkbox
-                if (checkboxes.length === 0) {
-                    selectAll.checked = false;
-                    selectAll.indeterminate = false;
-                } else if (checked.length === checkboxes.length) {
-                    selectAll.checked = true;
-                    selectAll.indeterminate = false;
-                } else if (checked.length === 0) {
-                    selectAll.checked = false;
-                    selectAll.indeterminate = false;
-                } else {
-                    selectAll.checked = false;
-                    selectAll.indeterminate = true;
-                }
+            function update() {
+                const selected = document.querySelectorAll('.school-checkbox:checked').length;
+                countEl.textContent = selected;
+                btn.disabled = selected === 0;
             }
 
-            // toggle all
-            if (selectAll) {
-                selectAll.addEventListener('change', function () {
-                    var checked = this.checked;
-                    document.querySelectorAll('.select-item').forEach(function (cb) {
-                        cb.checked = checked;
-                    });
-                    updateState();
-                });
-            }
-
-            // per-row change
-            document.addEventListener('change', function (e) {
-                if (e.target && e.target.classList.contains('select-item')) {
-                    updateState();
-                }
-            });
-
-            // on submit: ensure selected ids are submitted (checkboxes are inside the form now)
-            form.addEventListener('submit', function (e) {
-                if (document.querySelectorAll('.select-item:checked').length === 0) {
-                    e.preventDefault();
-                    alert('Please select at least one school.');
-                }
-            });
-
-            // initialize
-            updateState();
+            checkboxes.forEach(cb => cb.addEventListener('change', update));
+            update();
         })();
     </script>
 }

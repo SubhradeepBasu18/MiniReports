@@ -11,21 +11,31 @@ namespace MiniReportsProject.Controllers
     public class SchoolController : Controller
     {
         SchoolDAL _schoolDAL = new SchoolDAL();
+        GranteeDAL _granteeDAL = new GranteeDAL();
+
 
         // GET: School
         // single Index action with optional site id to avoid ambiguous matches
-        public ActionResult Index(int? id)
+        public ActionResult Index(int id)
         {
             // if caller provided a site id, expose it to the view (used for linking)
-            if (id.HasValue)
-            {
-                ViewBag.SiteId = id.Value;
-            }
+            //if (id.HasValue)
+            //{
+            //    ViewBag.SiteId = id.Value;
+            //}
 
             // currently GetAllSchoolNames returns the same list in both cases;
             // change DAL if you need different behaviour when id is present (e.g. only unlinked schools)
             List<SchoolModel> schools = _schoolDAL.GetAllSchoolNames();
-            return View(schools);
+            List<SiteModel> sites = _granteeDAL.GetAllSitesByGranteeID(id);
+
+            var linkedSchoolSiteVM = new LinkSchoolSiteViewModel
+            {
+                GranteeID = id,
+                siteList = sites,
+                schoolList = schools,
+            };
+            return View(linkedSchoolSiteVM);
         }
 
         [HttpPost]
