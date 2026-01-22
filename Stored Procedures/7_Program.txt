@@ -1,0 +1,37 @@
+﻿CREATE OR ALTER PROC sp_GetAllSitesByProgramID
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT
+        p.ProgramID,
+        p.ProgramType,
+        COUNT(DISTINCT s.SiteID)     AS SiteCount,
+        COUNT(DISTINCT sc.SchoolID)  AS SchoolCount
+    FROM dbo.Program p
+    LEFT JOIN dbo.Site s
+        ON s.ProgramTypeID = p.ProgramID
+    LEFT JOIN dbo.School sc
+        ON sc.SiteID = s.SiteID
+    --WHERE p.ProgramID = @ProgramID
+    GROUP BY p.ProgramID, p.ProgramType;
+END;
+
+
+exec sp_GetAllSitesByProgramID @ProgramID = 1;
+
+
+
+alter proc sp_LinkProgramToSite
+	@SiteID int,
+	@ProgramTypeID int
+as
+begin
+	update dbo.Site
+	set ProgramTypeID = @ProgramTypeID
+	where SiteID = @SiteID
+end;
+
+exec sp_LinkProgramToSite
+	@SiteID = 19,
+	@ProgramTypeID = 1;

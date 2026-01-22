@@ -144,5 +144,6 @@ namespace MiniReportsProject.DAL
                 throw new Exception("Failed to fetch names: " + err.Message);
             }
         }
+
     }
 }

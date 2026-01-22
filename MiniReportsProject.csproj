@@ -127,6 +127,7 @@
     <Compile Include="Controllers\StateController.cs" />
     <Compile Include="DAL\DapperContext.cs" />
     <Compile Include="DAL\GranteeDAL.cs" />
+    <Compile Include="DAL\ProgramDAL.cs" />
     <Compile Include="DAL\SchoolDAL.cs" />
     <Compile Include="DAL\SiteDAL.cs" />
     <Compile Include="Global.asax.cs">
@@ -134,6 +135,7 @@
     </Compile>
     <Compile Include="Models\EntityTypeModel.cs" />
     <Compile Include="Models\GradeModel.cs" />
+    <Compile Include="Models\ProgramModel.cs" />
     <Compile Include="ViewModel\GranteeCreateViewModel.cs" />
     <Compile Include="Models\GranteeModel.cs" />
     <Compile Include="Models\SchoolGradeModel.cs" />

@@ -11,5 +11,6 @@ namespace MiniReportsProject.ViewModel
         public List<SiteModel> siteList { get; set; }
         public string GranteeName { get; set; }
         public int GranteeID { get; set; }
+        public List<ProgramModel> ProgramList { get; set; }
     }
 }
