@@ -35,3 +35,14 @@ end;
 exec sp_LinkProgramToSite
 	@SiteID = 19,
 	@ProgramTypeID = 1;
+
+CREATE OR ALTER PROC sp_GetAllSitesDetailsByProgramID
+	@ProgramID int
+AS
+BEGIN
+    select site.SiteName from dbo.Site site
+    join dbo.Program pg
+	on site.ProgramTypeID = pg.ProgramID and pg.ProgramID = @ProgramID
+END;
+
+exec sp_GetAllSitesDetailsByProgramID @ProgramID = 1;

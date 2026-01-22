@@ -1,0 +1,38 @@
+﻿@model List<string>
+@{
+    ViewBag.Title = "Sites";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Sites</h5>
+                </div>
+
+                <ul class="list-group list-group-flush">
+                    @if (Model != null && Model.Any())
+                    {
+                        foreach (var site in Model)
+                        {
+                            <li class="list-group-item d-flex align-items-center">
+                                <i class="bi bi-geo-alt me-2 text-primary"></i>
+                                @site
+                            </li>
+                        }
+                    }
+                    else
+                    {
+                        <li class="list-group-item text-muted text-center">
+                            No sites available
+                        </li>
+                    }
+                </ul>
+
+            </div>
+
+        </div>
+    </div>
+</div>
