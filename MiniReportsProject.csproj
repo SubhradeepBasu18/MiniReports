@@ -122,6 +122,7 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\GranteeController.cs" />
+    <Compile Include="Controllers\ProgramController.cs" />
     <Compile Include="Controllers\SchoolController.cs" />
     <Compile Include="Controllers\SiteController.cs" />
     <Compile Include="Controllers\StateController.cs" />
@@ -216,6 +217,7 @@
     <Content Include="Views\School\Details.cshtml" />
     <Content Include="Views\Site\Edit.cshtml" />
     <Content Include="Views\School\Edit.cshtml" />
+    <Content Include="Views\Program\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

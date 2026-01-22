@@ -1,9 +1,7 @@
 ﻿@model MiniReportsProject.ViewModel.SiteViewModel
 
 <style>
-    /* =======================
-       Layout
-    ======================= */
+    
     .grantee-page {
         background-color: #f8f9fa;
         min-height: 100vh;
@@ -20,9 +18,7 @@
         margin-top: 3rem;
     }
 
-    /* =======================
-       Header
-    ======================= */
+    
     .page-header {
         background: #fff;
         border-bottom: 1px solid #dee2e6;
@@ -49,9 +45,6 @@
         margin-top: .25rem;
     }
 
-    /* =======================
-       Section Headers
-    ======================= */
     .content-header {
         display: flex;
         justify-content: space-between;
@@ -66,9 +59,6 @@
         color: #212529;
     }
 
-    /* =======================
-       Buttons
-    ======================= */
     .btn-group-custom {
         display: flex;
         gap: .75rem;
@@ -124,9 +114,6 @@
             background: #c82333;
         }
 
-    /* =======================
-       Cards & Lists
-    ======================= */
     .sites-list {
         display: flex;
         flex-direction: column;
@@ -169,9 +156,6 @@
         color: #6c757d;
     }
 
-    /* =======================
-       Empty State
-    ======================= */
     .empty-state {
         background: #fff;
         border: 1px dashed #dee2e6;
@@ -189,10 +173,7 @@
         color: #6c757d;
     }
 
-    /* =======================
-       Responsive
-    ======================= */
-    @@media (max-width: 768px) {
+   @@media (max-width: 768px) {
         .page-header-content,
         .content-header {
             flex-direction: column;
@@ -315,7 +296,14 @@
                     @foreach (var program in Model.ProgramList)
                     {
                         <div class="site-card">
-                            <h3 class="site-name">@program.ProgramType</h3>
+                            @*<h3 class="site-name">@program.ProgramType</h3>*@
+                            <h3 class="site-name">
+                                @Html.ActionLink(program.ProgramType,
+                                                 "Index",
+                                                 "Program",
+                                                 new { id = program.ProgramID },
+                                                 null)
+                            </h3>
                             <table class="table table-sm mt-3 mb-0">
                                 <thead>
                                     <tr>
