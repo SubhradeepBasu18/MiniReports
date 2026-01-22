@@ -45,6 +45,7 @@ namespace MiniReportsProject.Controllers
             return View(vm);
         }
 
+        // GET: Create new site
         public ActionResult Create(int id)
         {
             var model = new SiteCreateViewModel
@@ -56,6 +57,7 @@ namespace MiniReportsProject.Controllers
             return View(model);
         }
 
+        // POST: Create new site
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create(SiteCreateViewModel model)
@@ -67,24 +69,89 @@ namespace MiniReportsProject.Controllers
             }
 
             int siteTypeId = _granteeDAL.GetTypeIDByTypeName("Site", model.SelectedTypeName);
-
             if (siteTypeId == 0)
             {
-                ModelState.AddModelError(nameof(model.SelectedTypeName), "Selected type not found.");
+                ModelState.AddModelError(nameof(model.SelectedTypeName), "Invalid site type.");
                 model.EntityTypes = _granteeDAL.GetAllGranteeTypes("Site");
                 return View(model);
             }
 
             var site = new SiteModel
             {
+                SiteID = 0,  // Always 0 for new sites
                 SiteName = model.SiteName,
                 SiteTypeID = siteTypeId,
                 Address = model.Address,
                 GrantID = model.GrantID
             };
 
-            _siteDAL.AddSite(site);
+            _siteDAL.AddOrEditSite(site);
 
+            TempData["Success"] = "Site created successfully.";
+            return RedirectToAction("Index", "Grantee", new { id = model.GrantID });
+        }
+
+        // GET: Edit site
+        public ActionResult Edit(int id)
+        {
+            var site = _siteDAL.GetSiteByID(id);
+            if (site == null)
+            {
+                return HttpNotFound();
+            }
+
+            var model = new SiteCreateViewModel
+            {
+                SiteID = site.SiteID,
+                SiteName = site.SiteName,
+                Address = site.Address,
+                GrantID = site.GrantID,
+                SelectedTypeName = _granteeDAL.GetAllGranteeTypes("Site")
+                    .FirstOrDefault(t => t.EntityTypeID == site.SiteTypeID)?.TypeName,
+                EntityTypes = _granteeDAL.GetAllGranteeTypes("Site")
+            };
+
+            return View(model);
+        }
+
+        // POST: Edit site
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Edit(SiteCreateViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                model.EntityTypes = _granteeDAL.GetAllGranteeTypes("Site");
+                return View(model);
+            }
+
+            if (model.SiteID <= 0)
+            {
+                ModelState.AddModelError("", "Invalid site ID.");
+                model.EntityTypes = _granteeDAL.GetAllGranteeTypes("Site");
+                return View(model);
+            }
+
+            int siteTypeId = _granteeDAL.GetTypeIDByTypeName("Site", model.SelectedTypeName);
+            if (siteTypeId == 0)
+            {
+                ModelState.AddModelError(nameof(model.SelectedTypeName), "Invalid site type.");
+                model.EntityTypes = _granteeDAL.GetAllGranteeTypes("Site");
+                return View(model);
+            }
+
+            var site = new SiteModel
+            {
+                SiteID = model.SiteID,
+                SiteName = model.SiteName,
+                SiteTypeID = siteTypeId,
+                Address = model.Address,
+                GrantID = model.GrantID
+            };
+
+            _siteDAL.AddOrEditSite(site);
+
+            TempData["Success"] = "Site updated successfully.";
             return RedirectToAction("Index", "Grantee", new { id = model.GrantID });
         }
 
@@ -100,7 +167,6 @@ namespace MiniReportsProject.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-
         public ActionResult DeleteConfirm(int id)
         {
             var site = _siteDAL.GetSiteByID(id);
@@ -109,6 +175,7 @@ namespace MiniReportsProject.Controllers
                 return HttpNotFound();
             }
             _siteDAL.DeleteSite(id);
+            TempData["Success"] = "Site deleted successfully.";
             return RedirectToAction("Index", "Grantee", new { id = site.GrantID });
         }
     }

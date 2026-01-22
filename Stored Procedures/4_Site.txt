@@ -20,16 +20,40 @@ end;
 
 exec sp_GetSiteDetailsByID @SiteID = 1;
 
-ALTER proc [dbo].[sp_InsertSite]
-	@SiteName varchar(200),
-	@SiteTypeID int,
-	@Address varchar(300),
-	@GrantID int
-as
-begin
-	insert into Site (SiteName, SiteTypeID, Address, GranteeID)
-	values(@SiteName, @SiteTypeID, @Address, @GrantID)
-end;
+ALTER   PROCEDURE [dbo].[sp_InsertOrEditSite]
+(
+    @SiteID INT = 0,
+    @SiteName VARCHAR(200),
+    @SiteTypeID INT,
+    @Address VARCHAR(300),
+    @GrantID INT
+)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    IF @SiteID = 0
+    BEGIN
+        INSERT INTO dbo.Site (SiteName, SiteTypeID, Address, GranteeID)
+        VALUES (@SiteName, @SiteTypeID, @Address, @GrantID);
+
+        -- return new identity
+        SELECT CAST(SCOPE_IDENTITY() AS INT) AS SiteID;
+    END
+    ELSE
+    BEGIN
+        UPDATE dbo.Site
+        SET
+            SiteName = @SiteName,
+            SiteTypeID = @SiteTypeID,
+            Address = @Address
+        WHERE SiteID = @SiteID;
+
+        SELECT @SiteID AS SiteID;
+    END
+END
+
+
 
 
 create proc sp_GetAllSitesByGranteeID
@@ -64,7 +88,7 @@ create or alter proc sp_DeleteSiteByID
 	@SiteID int
 as
 begin
-	set nocount on
+	-- set nocount on
 	begin try
 		begin transaction
 			

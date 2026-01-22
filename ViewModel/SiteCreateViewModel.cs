@@ -8,6 +8,8 @@ namespace MiniReportsProject.ViewModel
 {
     public class SiteCreateViewModel
     {
+        public int SiteID { get; set; }
+
         public string SiteName { get; set; }
 
         public string SelectedTypeName { get; set; }

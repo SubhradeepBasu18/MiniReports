@@ -313,11 +313,19 @@
                                 }
                             </div>
                             <div class="site-actions">
+                                <a href="@Url.Action("Edit", "Site", new { id = site.SiteID })"
+                                   class="btn-secondary-custom">
+                                    Edit
+                                </a>
+                            </div>
+
+                            <div class="site-actions">
                                 <a href="@Url.Action("Index", "Site", new { id = site.SiteID })"
                                    class="btn-success-custom">
                                     Logon
                                 </a>
                             </div>
+
                             <div class="site-actions">
                                 <form method="post" action="@Url.Action("DeleteConfirm", "Site", new {id = site.SiteID})" class="delete-form" onsubmit="return confirm('Are you sure you want to delete this site?');">
                                     @Html.AntiForgeryToken()
